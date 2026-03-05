@@ -4,7 +4,7 @@ echo "--------------------------------"
 echo "OpenClaw VM Setup for Zach"
 echo "--------------------------------"
 
-# Ensure .ssh directory exists
+# Ensure SSH folder exists
 mkdir -p ~/.ssh
 
 echo ""
@@ -20,17 +20,23 @@ fi
 echo ""
 echo "Configuring SSH connection..."
 
-# Only add config if it doesn't exist
+# Add config if it doesn't exist
 if ! grep -q "ZTW-VM-OpenClaw" ~/.ssh/config 2>/dev/null; then
-cat <<CONFIG >> ~/.ssh/config
+cat <<EOF >> ~/.ssh/config
 
 Host ZTW-VM-OpenClaw
     HostName vm-openclaw-ztw.swordfish-bigeye.ts.net
     User zach
     IdentityFile ~/.ssh/ztw_ed25519
 
-CONFIG
+EOF
 fi
+
+echo ""
+echo "Installing SSH key on server..."
+echo "You may be asked for your VM password once."
+
+cat ~/.ssh/ztw_ed25519.pub | ssh zach@vm-openclaw-ztw.swordfish-bigeye.ts.net 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys'
 
 echo ""
 echo "Checking for VS Code..."
@@ -38,12 +44,11 @@ echo "Checking for VS Code..."
 if ! command -v code &> /dev/null
 then
     echo "VS Code CLI not found."
-    echo "If VS Code is installed, open it and run:"
-    echo ""
-    echo "Command Palette → 'Shell Command: Install \"code\" command in PATH'"
+    echo "Open VS Code and run:"
+    echo "Command Palette → Shell Command: Install 'code' command in PATH"
 else
     echo "Installing VS Code Remote SSH extension..."
-    code --install-extension ms-vscode-remote.remote-ssh || true
+    code --install-extension ms-vscode-remote.remote-ssh
 fi
 
 echo ""
@@ -52,19 +57,7 @@ echo "Setup Complete"
 echo "--------------------------------"
 
 echo ""
-echo "Run this ONE command to authorize your key:"
-echo ""
-
-echo "ssh-copy-id -i ~/.ssh/ztw_ed25519.pub zach@vm-openclaw-ztw.swordfish-bigeye.ts.net"
-
-echo ""
-echo "If ssh-copy-id is not installed run instead:"
-echo ""
-
-echo "cat ~/.ssh/ztw_ed25519.pub | ssh zach@vm-openclaw-ztw.swordfish-bigeye.ts.net 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'"
-
-echo ""
-echo "After that open VS Code and connect to:"
+echo "Open VS Code and connect to:"
 echo ""
 echo "ZTW-VM-OpenClaw"
 echo ""
