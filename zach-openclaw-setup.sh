@@ -1,4 +1,3 @@
-cat > zach-openclaw-setup.sh <<'EOF'
 #!/bin/bash
 
 echo "--------------------------------"
@@ -69,4 +68,3 @@ echo "After that open VS Code and connect to:"
 echo ""
 echo "ZTW-VM-OpenClaw"
 echo ""
-EOF
